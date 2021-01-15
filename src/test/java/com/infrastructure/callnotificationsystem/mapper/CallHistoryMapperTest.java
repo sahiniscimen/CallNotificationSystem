@@ -31,7 +31,7 @@ class CallHistoryMapperTest {
         assertEquals("05002002020", callHistory.getCalledUser());
         assertEquals("05001001010", callHistory.getCallerUser());
         assertEquals(1, callHistory.getNumberOfCalls());
-        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory.getCallDateTime());
+        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory.getLastCallDateTime());
     }
 
     @Test

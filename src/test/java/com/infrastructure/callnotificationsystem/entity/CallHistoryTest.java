@@ -1,6 +1,5 @@
 package com.infrastructure.callnotificationsystem.entity;
 
-import com.infrastructure.callnotificationsystem.dto.CallHistoryDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,7 +14,7 @@ class CallHistoryTest {
 
         assertEquals("05002002020", callHistory.getCalledUser());
         assertEquals("05001001010", callHistory.getCallerUser());
-        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory.getCallDateTime());
+        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory.getLastCallDateTime());
         assertEquals(1, callHistory.getNumberOfCalls());
     }
 }

@@ -23,7 +23,7 @@ public class CallHistoryMapper {
 
     private static String stringifyCallHistoryList(List<CallHistory> callHistoryList){
         return callHistoryList.stream()
-                .map(callHistory -> callHistory.getCallerUser() + " " + callHistory.getCallDateTime().toString()+ " " + callHistory.getNumberOfCalls()+ "/n")
+                .map(callHistory -> callHistory.getCallerUser() + " " + callHistory.getLastCallDateTime().toString()+ " " + callHistory.getNumberOfCalls()+ "/n")
                 .collect(Collectors.joining());
     }
 }
