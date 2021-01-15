@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CallHistoryRepository extends CrudRepository<CallHistory, String> {
+    CallHistory findByCalledUserAndCallerUser(String calledUser, String callerUser);
 }

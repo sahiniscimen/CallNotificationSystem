@@ -40,6 +40,21 @@ class CallHistoryRepositoryTest {
     }
 
     @Test
+    void whenCreatedThenFindByCalledUserAndCallerUser(){
+        callHistoryRepository.save(new CallHistory(
+                "05002002020",
+                "05001001010",
+                LocalDateTime.of(2020,01,14,21,47), 1));
+
+        CallHistory callHistory = callHistoryRepository.findByCalledUserAndCallerUser("05002002020", "05001001010");
+
+        assertEquals("05002002020", callHistory.getCalledUser());
+        assertEquals("05001001010", callHistory.getCallerUser());
+        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory.getLastCallDateTime());
+        assertEquals(1, callHistory.getNumberOfCalls());
+    }
+
+    @Test
     void whenUpdatedThenOnlyUpdatedAreaIsChanged(){
         callHistoryRepository.save(new CallHistory(
                 "05002002020",
