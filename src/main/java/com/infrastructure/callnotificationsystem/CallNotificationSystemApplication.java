@@ -9,5 +9,4 @@ public class CallNotificationSystemApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CallNotificationSystemApplication.class, args);
 	}
-
 }

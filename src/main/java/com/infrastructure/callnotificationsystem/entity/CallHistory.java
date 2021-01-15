@@ -23,4 +23,6 @@ public class CallHistory {
     private String callerUser;
     @NonNull
     private LocalDateTime callDateTime;
+    @NonNull
+    private int numberOfCalls;
 }
