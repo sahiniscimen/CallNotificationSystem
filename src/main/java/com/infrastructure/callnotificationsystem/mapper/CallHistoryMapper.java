@@ -2,11 +2,13 @@ package com.infrastructure.callnotificationsystem.mapper;
 
 import com.infrastructure.callnotificationsystem.dto.CallHistoryDTO;
 import com.infrastructure.callnotificationsystem.entity.CallHistory;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class CallHistoryMapper {
 
     public static final String LANGUAGE = "eng";
