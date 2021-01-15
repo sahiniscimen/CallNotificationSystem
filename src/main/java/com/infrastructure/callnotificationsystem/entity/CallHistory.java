@@ -1,9 +1,6 @@
 package com.infrastructure.callnotificationsystem.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,6 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Table
 public class CallHistory {
     @Id
@@ -22,7 +20,7 @@ public class CallHistory {
     @NonNull
     private String callerUser;
     @NonNull
-    private LocalDateTime callDateTime;
+    private LocalDateTime lastCallDateTime;
     @NonNull
     private int numberOfCalls;
 }
