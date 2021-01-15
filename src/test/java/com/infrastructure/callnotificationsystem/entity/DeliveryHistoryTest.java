@@ -1,6 +1,5 @@
 package com.infrastructure.callnotificationsystem.entity;
 
-import com.infrastructure.callnotificationsystem.dto.DeliveryHistoryDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
