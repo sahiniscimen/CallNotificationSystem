@@ -45,7 +45,7 @@ public class CallNotificationServiceTest {
 
         Optional<String> optionalMessage = callNotificationService.getCallHistoryMessage("05002002020");
 
-        assertEquals(optionalMessage.get(), "Test String");
+        assertEquals("Test String", optionalMessage.get());
     }
 
     @Test
