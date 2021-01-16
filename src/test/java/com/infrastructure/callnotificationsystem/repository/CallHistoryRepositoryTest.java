@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,13 +25,20 @@ class CallHistoryRepositoryTest {
     }
 
     @Test
-    void whenCreatedThenFindByCalledUser(){
+    void whenFindByCalledUserAndDoesNotExistThenReturnEmptyList(){
+        List<CallHistory> callHistoryList = callHistoryRepository.findByCalledUser("05002002020");
+
+        assertTrue(callHistoryList.isEmpty());
+    }
+
+    @Test
+    void whenCreatedThenFindByCalledUserReturnSuccessfully(){
         callHistoryRepository.save(new CallHistory(
                 "05002002020",
                 "05001001010",
                 LocalDateTime.of(2020,01,14,21,47), 1));
 
-        CallHistory callHistory = callHistoryRepository.findById("05002002020").get();
+        CallHistory callHistory = callHistoryRepository.findByCalledUser("05002002020").get(0);
 
         assertEquals("05002002020", callHistory.getCalledUser());
         assertEquals("05001001010", callHistory.getCallerUser());
@@ -40,13 +47,38 @@ class CallHistoryRepositoryTest {
     }
 
     @Test
-    void whenCreatedThenFindByCalledUserAndCallerUser(){
+    void whenCreatedSeveralThenFindByCalledUserReturnListSuccessfully(){
+        callHistoryRepository.save(new CallHistory(
+                "05002002020",
+                "05001001010",
+                LocalDateTime.of(2020,01,14,21,47), 1));
+        callHistoryRepository.save(new CallHistory(
+                "05002002020",
+                "05001001011",
+                LocalDateTime.of(2020,01,14,21,47), 1));
+
+
+        CallHistory callHistory1 = callHistoryRepository.findByCalledUser("05002002020").get(0);
+        CallHistory callHistory2 = callHistoryRepository.findByCalledUser("05002002020").get(1);
+
+        assertEquals("05002002020", callHistory1.getCalledUser());
+        assertEquals("05001001010", callHistory1.getCallerUser());
+        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory1.getLastCallDateTime());
+        assertEquals(1, callHistory1.getNumberOfCalls());
+        assertEquals("05002002020", callHistory2.getCalledUser());
+        assertEquals("05001001011", callHistory2.getCallerUser());
+        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory2.getLastCallDateTime());
+        assertEquals(1, callHistory2.getNumberOfCalls());
+    }
+
+    @Test
+    void whenCreatedThenFindByCalledUserAndCallerUserReturnSuccessfully(){
         callHistoryRepository.save(new CallHistory(
                 "05002002020",
                 "05001001010",
                 LocalDateTime.of(2020,01,14,21,47), 1));
 
-        CallHistory callHistory = callHistoryRepository.findByCalledUserAndCallerUser("05002002020", "05001001010");
+        CallHistory callHistory = callHistoryRepository.findByCalledUserAndCallerUser("05002002020", "05001001010").get();
 
         assertEquals("05002002020", callHistory.getCalledUser());
         assertEquals("05001001010", callHistory.getCallerUser());
@@ -56,33 +88,50 @@ class CallHistoryRepositoryTest {
 
     @Test
     void whenUpdatedThenOnlyUpdatedAreaIsChanged(){
-        callHistoryRepository.save(new CallHistory(
-                "05002002020",
-                "05001001010",
-                LocalDateTime.of(2020,01,14,21,47), 1));
-        callHistoryRepository.save(new CallHistory(
-                "05002002020",
-                "05001001010",
-                LocalDateTime.of(2020,01,14,22,47), 2));
-
-        CallHistory callHistory = callHistoryRepository.findById("05002002020").get();
-
-        assertEquals("05002002020", callHistory.getCalledUser());
-        assertEquals("05001001010", callHistory.getCallerUser());
-        assertEquals(LocalDateTime.of(2020,01,14,22,47), callHistory.getLastCallDateTime());
-        assertEquals(2, callHistory.getNumberOfCalls());
-    }
-
-    @Test
-    void whenDeletedThenFindByIdShouldThrowException(){
         CallHistory callHistory = new CallHistory(
                 "05002002020",
                 "05001001010",
                 LocalDateTime.of(2020,01,14,21,47), 1);
         callHistoryRepository.save(callHistory);
 
-        callHistoryRepository.delete(callHistory);
+        CallHistory callHistoryWillBeUpdated = callHistoryRepository.findByCalledUser("05002002020").get(0);
+        callHistoryWillBeUpdated.setLastCallDateTime(LocalDateTime.of(2020,01,14,22,47));
+        callHistoryWillBeUpdated.setNumberOfCalls(2);
+        callHistoryRepository.save(callHistoryWillBeUpdated);
 
-        assertThrows(NoSuchElementException.class,() -> callHistoryRepository.findById("05002002020").get());
+        CallHistory callHistoryUpdated = callHistoryRepository.findByCalledUser("05002002020").get(0);
+        assertEquals("05002002020", callHistoryUpdated.getCalledUser());
+        assertEquals("05001001010", callHistoryUpdated.getCallerUser());
+        assertEquals(LocalDateTime.of(2020,01,14,22,47), callHistoryUpdated.getLastCallDateTime());
+        assertEquals(2, callHistoryUpdated.getNumberOfCalls());
+    }
+
+    @Test
+    void whenDeletedByCallerUserThenFindByCalledUserAndCallerUserThenReturnOptionalPresentFalse(){
+        CallHistory callHistory = new CallHistory(
+                "05002002020",
+                "05001001010",
+                LocalDateTime.of(2020,01,14,21,47), 1);
+        callHistoryRepository.save(callHistory);
+
+        callHistoryRepository.deleteByCalledUser("05002002020");
+
+        assertFalse(callHistoryRepository.findByCalledUserAndCallerUser("05002002020", "05001001010").isPresent());
+    }
+
+    @Test
+    void whenExistByCalledUserCalledAndDoesNotExistThenReturnFalse(){
+        assertFalse(callHistoryRepository.existsByCalledUser("05001001010"));
+    }
+
+    @Test
+    void whenExistByCalledUserCalledAndExistsThenReturnTrue(){
+        CallHistory callHistory = new CallHistory(
+                "05002002020",
+                "05001001010",
+                LocalDateTime.of(2020,01,14,21,47), 1);
+        callHistoryRepository.save(callHistory);
+
+        assertTrue(callHistoryRepository.existsByCalledUser("05002002020"));
     }
 }

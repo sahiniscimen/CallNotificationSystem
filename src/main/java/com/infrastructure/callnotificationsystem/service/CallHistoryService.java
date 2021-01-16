@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -21,17 +22,14 @@ public class CallHistoryService implements CallHistoryServiceInterface{
     private CallHistoryRepository callHistoryRepository;
 
     @Override
-    public CallHistory createCallHistory(CallHistoryDTO callHistoryDTO) {
-        CallHistory callHistory = getCallHistory(callHistoryDTO);
-
-        if(callHistory == null)
-            return callHistoryRepository.save(convertToCallHistory(callHistoryDTO));
-        else {
-            return updateCallHistory(callHistory);
-        }
+    public CallHistory createOrUpdateCallHistory(CallHistoryDTO callHistoryDTO) {
+        Optional<CallHistory> optionalCallHistory = getCallHistory(callHistoryDTO);
+        return optionalCallHistory.isPresent() ?
+                updateCallHistory(optionalCallHistory.get()):
+                callHistoryRepository.save(convertToCallHistory(callHistoryDTO));
     }
 
-    private CallHistory getCallHistory(CallHistoryDTO callHistoryDTO){
+    private Optional<CallHistory> getCallHistory(CallHistoryDTO callHistoryDTO){
         return callHistoryRepository
                 .findByCalledUserAndCallerUser(callHistoryDTO.getCalledUser(), callHistoryDTO.getCallerUser());
     }

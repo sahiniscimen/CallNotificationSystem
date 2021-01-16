@@ -3,6 +3,7 @@ package com.infrastructure.callnotificationsystem.entity;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -10,11 +11,13 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
 @Table
 public class DeliveryHistory {
     @Id
+    @GeneratedValue
+    private Long deliveryHistoryId;
     @NonNull
     private String callerUser;
     @NonNull
