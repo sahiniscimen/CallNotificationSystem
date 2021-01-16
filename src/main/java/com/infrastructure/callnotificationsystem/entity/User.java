@@ -3,6 +3,7 @@ package com.infrastructure.callnotificationsystem.entity;
 import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,6 +15,8 @@ import javax.persistence.Table;
 @Table
 public class User {
     @Id
+    @GeneratedValue
+    private Long id;
     @NonNull
     private String phoneNumber;
 }

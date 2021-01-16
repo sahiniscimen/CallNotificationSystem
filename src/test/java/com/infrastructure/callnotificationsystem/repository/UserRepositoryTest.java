@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestPropertySource(properties = {
@@ -21,11 +23,23 @@ class UserRepositoryTest {
     void injectedComponentsShouldNotBeNull(){ assertNotNull(userRepository);}
 
     @Test
-    void whenCreatedThenFindByPhoneNumber(){
-        userRepository.save(new User("05001001010"));
+    void whenCreatedFindByPhoneNumberCalledThenReturnSuccessfully(){
+        User user1 = userRepository.save(new User("05001001010"));
 
-        User user = userRepository.findById("05001001010").get();
+        Optional<User> optionalUser = userRepository.findByPhoneNumber("05001001010");
 
-        assertEquals("05001001010", user.getPhoneNumber());
+        assertTrue(optionalUser.isPresent());
+        assertEquals(user1.getPhoneNumber(), optionalUser.get().getPhoneNumber());
+    }
+
+    @Test
+    void whenCreatedSeveralAndFindAllCalledThenReturnListOfAllSuccessfully(){
+        User user1 = userRepository.save(new User("05001001010"));
+        User user2 = userRepository.save(new User("05001001011"));
+
+        List<User> userList = userRepository.findAll();
+
+        assertTrue(userList.contains(user1));
+        assertTrue(userList.contains(user2));
     }
 }

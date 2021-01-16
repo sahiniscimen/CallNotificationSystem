@@ -48,27 +48,20 @@ class CallHistoryRepositoryTest {
 
     @Test
     void whenCreatedSeveralThenFindByCalledUserReturnListSuccessfully(){
-        callHistoryRepository.save(new CallHistory(
+        CallHistory callHistory1 = callHistoryRepository.save(new CallHistory(
                 "05002002020",
                 "05001001010",
                 LocalDateTime.of(2020,01,14,21,47), 1));
-        callHistoryRepository.save(new CallHistory(
+        CallHistory callHistory2 = callHistoryRepository.save(new CallHistory(
                 "05002002020",
                 "05001001011",
                 LocalDateTime.of(2020,01,14,21,47), 1));
 
 
-        CallHistory callHistory1 = callHistoryRepository.findByCalledUser("05002002020").get(0);
-        CallHistory callHistory2 = callHistoryRepository.findByCalledUser("05002002020").get(1);
+        List<CallHistory> callHistoryList = callHistoryRepository.findByCalledUser("05002002020");
 
-        assertEquals("05002002020", callHistory1.getCalledUser());
-        assertEquals("05001001010", callHistory1.getCallerUser());
-        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory1.getLastCallDateTime());
-        assertEquals(1, callHistory1.getNumberOfCalls());
-        assertEquals("05002002020", callHistory2.getCalledUser());
-        assertEquals("05001001011", callHistory2.getCallerUser());
-        assertEquals(LocalDateTime.of(2020,01,14,21,47), callHistory2.getLastCallDateTime());
-        assertEquals(1, callHistory2.getNumberOfCalls());
+        assertTrue(callHistoryList.contains(callHistory1));
+        assertTrue(callHistoryList.contains(callHistory2));
     }
 
     @Test

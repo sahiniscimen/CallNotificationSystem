@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -29,17 +28,17 @@ public class DeliveryHistoryService implements DeliveryHistoryServiceInterface {
     CallHistoryRepository callHistoryRepository;
 
     @Override
-    public DeliveryHistory createDeliveryHistory(DeliveryHistoryDTO deliveryHistoryDTO) throws NoSuchCallHistoryException{
-        DeliveryHistory deliveryHistory = new DeliveryHistory();
+    public DeliveryHistory createDeliveryHistory(DeliveryHistoryDTO deliveryHistoryDTO) {
+        DeliveryHistory deliveryHistory;
         Optional<LocalDateTime> lastCallDateTime = getLastCallDateTime(deliveryHistoryDTO);
 
         if (!lastCallDateTime.isPresent())
             throw new NoSuchCallHistoryException("There is not such call history.");
-
-        deliveryHistory = deliveryHistoryMapper.createEntityFromDeliveryHistoryDTO(
-                deliveryHistoryDTO,
-                LocalDateTime.now(),
-                getLastCallDateTime(deliveryHistoryDTO).get());
+        else
+            deliveryHistory = deliveryHistoryMapper.createEntityFromDeliveryHistoryDTO(
+                    deliveryHistoryDTO,
+                    LocalDateTime.now(),
+                    lastCallDateTime.get());
         return deliveryHistoryRepository.save(deliveryHistory);
     }
 
