@@ -1,10 +1,14 @@
 package com.infrastructure.callnotificationsystem.dto;
 
-import lombok.Data;
-import lombok.NonNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class UserDTO {
     @NonNull
+    @JsonProperty("PhoneNumber")
     private String phoneNumber;
 }

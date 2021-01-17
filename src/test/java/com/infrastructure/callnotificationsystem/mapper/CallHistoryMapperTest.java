@@ -4,6 +4,8 @@ import com.infrastructure.callnotificationsystem.dto.CallHistoryDTO;
 import com.infrastructure.callnotificationsystem.entity.CallHistory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,13 +13,20 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestPropertySource(properties = {
+        "application.language=eng",
+})
 class CallHistoryMapperTest {
 
-    CallHistoryMapper callHistoryMapper;
+    @Value("${application.language}")
+    private String LANGUAGE;
+
+    private CallHistoryMapper callHistoryMapper;
 
     @BeforeEach
-    void setUp() {
+    void setUp(){
         callHistoryMapper = new CallHistoryMapper();
+        callHistoryMapper.LANGUAGE = LANGUAGE;
     }
 
     @Test
@@ -48,23 +57,27 @@ class CallHistoryMapperTest {
         callHistoryList.add(callHistory2);
         callHistoryList.add(callHistory3);
 
+        callHistoryMapper.LANGUAGE = "eng";
         String message = callHistoryMapper.convertEntitiesToMessage(callHistoryList);
+        String  languageDependentPart = "Missed calls: ";
 
-        String language = callHistoryMapper.LANGUAGE;
+        assertCompareMessageWithLanguageDependentPart(languageDependentPart, message);
 
-        String languageDependentPart = "";
-        if(language.equals("tur"))
-            languageDependentPart = "Sizi arayan numaralar: ";
-        else if(language.equals("eng"))
-            languageDependentPart = "Missed calls: ";
+        callHistoryMapper.LANGUAGE = "tur";
+        message = callHistoryMapper.convertEntitiesToMessage(callHistoryList);
+        languageDependentPart = "Sizi arayan numaralar: ";
 
+        assertCompareMessageWithLanguageDependentPart(languageDependentPart, message);
+    }
+
+    void assertCompareMessageWithLanguageDependentPart(String languageDependentPart, String message){
         assertEquals(languageDependentPart +
-                            "05001001010 " +
-                            LocalDateTime.of(2020,01,14,21,47).toString() + " " + 1 + "/n" +
-                            "05001001011 " +
-                            LocalDateTime.of(2020,01,14,22,47).toString() + " " + 2 + "/n" +
-                            "05001001012 " +
-                            LocalDateTime.of(2020,01,14,23,47).toString() + " " + 3 + "/n"
-                    , message);
+                        "05001001010 " +
+                        LocalDateTime.of(2020,01,14,21,47).toString() + " " + 1 + "\n" +
+                        "05001001011 " +
+                        LocalDateTime.of(2020,01,14,22,47).toString() + " " + 2 + "\n" +
+                        "05001001012 " +
+                        LocalDateTime.of(2020,01,14,23,47).toString() + " " + 3 + "\n"
+                , message);
     }
 }
