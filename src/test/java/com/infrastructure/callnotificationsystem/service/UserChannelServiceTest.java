@@ -20,10 +20,10 @@ class UserChannelServiceTest {
     private UserChannelService userChannelService;
 
     @Test
-    void whenFindAllCalledThenReturnSuccessfully(){
+    void whenFindByPhoneNumberCalledThenReturnSuccessfully(){
 
-        userChannelService.getAllUsers();
+        userChannelService.getUserByPhoneNumber("5002002020");
 
-        verify(userRepository, times(1)).findAll();
+        verify(userRepository, times(1)).findByPhoneNumber("5002002020");
     }
 }

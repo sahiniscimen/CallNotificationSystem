@@ -10,6 +10,4 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, String> {
     Optional<User> findByPhoneNumber(String phoneNumber);
-    @Override
-    List<User> findAll();
 }

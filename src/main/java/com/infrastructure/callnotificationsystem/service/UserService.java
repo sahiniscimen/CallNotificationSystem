@@ -6,11 +6,18 @@ import com.infrastructure.callnotificationsystem.exception.UserAlreadyExistsExce
 import com.infrastructure.callnotificationsystem.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @Log4j2
 public class UserService implements UserServiceInterface {
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -19,6 +26,6 @@ public class UserService implements UserServiceInterface {
         if (userRepository.findByPhoneNumber(userDTO.getPhoneNumber()).isPresent())
             throw new UserAlreadyExistsException("Phone number is already registered.");
 
-        return userRepository.save(new User(userDTO.getPhoneNumber()));
+        return userRepository.save(new User(userDTO.getPhoneNumber(), bCryptPasswordEncoder.encode(userDTO.getPassword())));
     }
 }

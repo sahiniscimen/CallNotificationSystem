@@ -8,8 +8,9 @@ class UserTest {
 
     @Test
     void createUser(){
-        User user = new User("05001001010");
+        User user = new User("05001001010","12345678");
 
         assertEquals("05001001010", user.getPhoneNumber());
+        assertEquals("12345678", user.getPassword());
     }
 }

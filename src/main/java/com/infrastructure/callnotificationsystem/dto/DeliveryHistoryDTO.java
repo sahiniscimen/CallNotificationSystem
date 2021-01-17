@@ -3,6 +3,8 @@ package com.infrastructure.callnotificationsystem.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import javax.validation.constraints.Pattern;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,8 +12,10 @@ import lombok.*;
 public class DeliveryHistoryDTO {
     @NonNull
     @JsonProperty("CallerPhoneNumber")
+    @Pattern(regexp="[\\d]{10}")
     private String callerUser;
-    @JsonProperty("DeliveredPhoneNumber")
     @NonNull
+    @JsonProperty("DeliveredPhoneNumber")
+    @Pattern(regexp="[\\d]{10}")
     private String deliveredUser;
 }

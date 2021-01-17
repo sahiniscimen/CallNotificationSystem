@@ -19,4 +19,6 @@ public class User {
     private Long id;
     @NonNull
     private String phoneNumber;
+    @NonNull
+    private String password;
 }
