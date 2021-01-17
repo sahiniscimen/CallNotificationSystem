@@ -29,12 +29,6 @@ public class CallNotificationService implements CallNotificationServiceInterface
                 Optional.of(callHistoryMapper.convertEntitiesToMessage(callHistoryList));
     }
 
-    @Override
-    public void deleteCallHistory(String calledUser) {
-        if (callHistoryRepository.existsByCalledUser(calledUser))
-            callHistoryRepository.deleteByCalledUser(calledUser);
-    }
-
     private List<CallHistory> getCallHistory(String calledUser){
         return callHistoryRepository.findByCalledUser(calledUser);
     }

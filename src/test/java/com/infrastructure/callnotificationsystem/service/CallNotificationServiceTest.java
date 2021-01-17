@@ -58,22 +58,4 @@ class CallNotificationServiceTest {
 
         assertFalse(optionalMessage.isPresent());
     }
-
-    @Test
-    void whenDeleteCallHistoryCalledThenCallHistoryDeletedSuccessfully(){
-        given(callHistoryRepository.existsByCalledUser("05002002020")).willReturn(true);
-
-        callNotificationService.deleteCallHistory("05002002020");
-
-        verify(callHistoryRepository).deleteByCalledUser("05002002020");
-    }
-
-    @Test
-    void whenDeleteCallHistoryCalledDoesNotExistThenDoNothing(){
-        given(callHistoryRepository.existsByCalledUser("05002002020")).willReturn(false);
-
-        callNotificationService.deleteCallHistory("05002002020");
-
-        verify(callHistoryRepository, times(0)).deleteByCalledUser("05002002020");
-    }
 }

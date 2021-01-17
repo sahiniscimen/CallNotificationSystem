@@ -12,5 +12,5 @@ public interface CallHistoryRepository extends CrudRepository<CallHistory, Long>
     boolean existsByCalledUser(String calledUser);
     List<CallHistory> findByCalledUser(String calledUser);
     Optional<CallHistory> findByCalledUserAndCallerUser(String calledUser, String callerUser);
-    void deleteByCalledUser(String calledUser);
+    void deleteByCalledUserAndCallerUser(String calledUser, String callerUser);
 }

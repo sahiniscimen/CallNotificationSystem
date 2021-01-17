@@ -100,14 +100,14 @@ class CallHistoryRepositoryTest {
     }
 
     @Test
-    void whenDeletedByCallerUserThenFindByCalledUserAndCallerUserThenReturnOptionalPresentFalse(){
+    void whenDeletedByCalledUserAndCallerUserThenFindByCalledUserAndCallerUserThenReturnOptionalPresentFalse(){
         CallHistory callHistory = new CallHistory(
                 "05002002020",
                 "05001001010",
                 LocalDateTime.of(2020,01,14,21,47), 1);
         callHistoryRepository.save(callHistory);
 
-        callHistoryRepository.deleteByCalledUser("05002002020");
+        callHistoryRepository.deleteByCalledUserAndCallerUser("05002002020","05001001010");
 
         assertFalse(callHistoryRepository.findByCalledUserAndCallerUser("05002002020", "05001001010").isPresent());
     }

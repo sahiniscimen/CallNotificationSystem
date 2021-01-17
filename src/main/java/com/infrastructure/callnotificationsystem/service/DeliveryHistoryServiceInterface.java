@@ -4,5 +4,5 @@ import com.infrastructure.callnotificationsystem.dto.DeliveryHistoryDTO;
 import com.infrastructure.callnotificationsystem.entity.DeliveryHistory;
 
 public interface DeliveryHistoryServiceInterface {
-    DeliveryHistory createDeliveryHistory(DeliveryHistoryDTO deliveryHistoryDTO);
+    DeliveryHistory createDeliveryHistoryAndDeleteCallHistory(DeliveryHistoryDTO deliveryHistoryDTO);
 }

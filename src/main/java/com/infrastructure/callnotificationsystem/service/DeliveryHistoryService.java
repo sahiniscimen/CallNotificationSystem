@@ -28,28 +28,28 @@ public class DeliveryHistoryService implements DeliveryHistoryServiceInterface {
     CallHistoryRepository callHistoryRepository;
 
     @Override
-    public DeliveryHistory createDeliveryHistory(DeliveryHistoryDTO deliveryHistoryDTO) {
+    public DeliveryHistory createDeliveryHistoryAndDeleteCallHistory(DeliveryHistoryDTO deliveryHistoryDTO) {
         DeliveryHistory deliveryHistory;
-        Optional<LocalDateTime> lastCallDateTime = getLastCallDateTime(deliveryHistoryDTO);
+        Optional<CallHistory> optionalCallHistory = getCallHistory(deliveryHistoryDTO);
 
-        if (!lastCallDateTime.isPresent())
+        if (!optionalCallHistory.isPresent())
             throw new NoSuchCallHistoryException("There is not such call history.");
-        else
+        else{
             deliveryHistory = deliveryHistoryMapper.createEntityFromDeliveryHistoryDTO(
                     deliveryHistoryDTO,
                     LocalDateTime.now(),
-                    lastCallDateTime.get());
+                    optionalCallHistory.get().getLastCallDateTime());
+            callHistoryRepository.deleteByCalledUserAndCallerUser(deliveryHistory.getDeliveredUser(), deliveryHistoryDTO.getCallerUser());
+        }
         return deliveryHistoryRepository.save(deliveryHistory);
     }
 
-    private Optional<LocalDateTime> getLastCallDateTime(DeliveryHistoryDTO deliveryHistoryDTO) {
+    private Optional<CallHistory> getCallHistory(DeliveryHistoryDTO deliveryHistoryDTO) {
         Optional<CallHistory> optionalCallHistory = callHistoryRepository.findByCalledUserAndCallerUser(
                 deliveryHistoryDTO.getDeliveredUser(),
                 deliveryHistoryDTO.getCallerUser());
         return optionalCallHistory.isPresent() ?
-                Optional.of(optionalCallHistory.get().getLastCallDateTime()):
+                optionalCallHistory:
                 Optional.empty();
     }
-
-
 }

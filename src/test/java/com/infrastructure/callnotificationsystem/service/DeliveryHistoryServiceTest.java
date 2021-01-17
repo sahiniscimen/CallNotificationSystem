@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class DeliveryHistoryServiceTest {
@@ -38,7 +40,7 @@ class DeliveryHistoryServiceTest {
     private DeliveryHistoryService deliveryHistoryService;
 
     @Test
-    void whenCreateCalledAndCallHistoryExistsThenCreateSuccessfully(){
+    void whenCreateCalledAndCallHistoryExistsThenCreateAndDeleteSuccessfully(){
         final LocalDateTime mockLocalDate = LocalDateTime.of(2020,01,14,21,47);
         final CallHistory mockCallHistory = new CallHistory("05002002020","05001001010", mockLocalDate, 1);
         final DeliveryHistory mockDeliveryHistory = new DeliveryHistory("05001001010","05002002020", mockLocalDate,mockLocalDate);
@@ -52,8 +54,9 @@ class DeliveryHistoryServiceTest {
                 eq(mockLocalDate))).willReturn(mockDeliveryHistory);
         given(deliveryHistoryRepository.save(any())).willAnswer(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
-        DeliveryHistory deliveryHistory = deliveryHistoryService.createDeliveryHistory(mockDeliveryHistoryDTO);
+        DeliveryHistory deliveryHistory = deliveryHistoryService.createDeliveryHistoryAndDeleteCallHistory(mockDeliveryHistoryDTO);
 
+        verify(callHistoryRepository, times(1)).deleteByCalledUserAndCallerUser("05002002020","05001001010");
         assertEquals("05001001010", deliveryHistory.getCallerUser());
         assertEquals("05002002020", deliveryHistory.getDeliveredUser());
         assertEquals(mockLocalDate, deliveryHistory.getDeliveryDateTime());
@@ -66,6 +69,6 @@ class DeliveryHistoryServiceTest {
         given(callHistoryRepository.findByCalledUserAndCallerUser("05002002020","05001001010"))
                 .willReturn(Optional.empty());
 
-        assertThrows(NoSuchCallHistoryException.class, () -> deliveryHistoryService.createDeliveryHistory(mockDeliveryHistoryDTO));
+        assertThrows(NoSuchCallHistoryException.class, () -> deliveryHistoryService.createDeliveryHistoryAndDeleteCallHistory(mockDeliveryHistoryDTO));
     }
 }
