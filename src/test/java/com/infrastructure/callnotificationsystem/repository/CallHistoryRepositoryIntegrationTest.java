@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update"
 })
-class CallHistoryRepositoryTest {
+class CallHistoryRepositoryIntegrationTest {
 
     @Autowired private CallHistoryRepository callHistoryRepository;
 

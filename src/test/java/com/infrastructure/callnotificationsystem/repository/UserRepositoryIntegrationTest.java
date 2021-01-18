@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=update"
 })
-class UserRepositoryTest {
+class UserRepositoryIntegrationTest {
 
     @Autowired UserRepository userRepository;
 
