@@ -57,7 +57,7 @@ now the system is ready to use with internet browser ( or any API client like [P
 # @How it works?
 
 **Best Case Scenario**
-```mermaid
+<div class="mermaid">
 sequenceDiagram
 Company      		 -->> NotificationSystem: createUser(calledPhoneNumber,password)
 NotificationSystem   ->> Company: HTTP.200(OK)
@@ -73,13 +73,14 @@ NotificationSystem   ->> Company: HTTP.200(OK)
 CallerUser 			 -->> NotificationSystem: subscribe(callerPhoneNumber, password)
 NotificationSystem	 ->> CallerUser: Authenticated
 NotificationSystem	 ->> CallerUser: NotificationMessages(Delivery)
-```
+</div>
+
 The system can be consumed in the best case scenario for a quick start.
 
 The system has multiple scenarios on the different layers. One can follow the scenarios chronologically with the following sequence diagrams. In the diagrams dotted line means that the response of the process has more than one possibility. Solid line means that the response is absolute.
 
 **Company to NoticationAPI in CreateUser**
-```mermaid
+<div class="mermaid">
 sequenceDiagram
 Company      	-->> NoticationAPI: createUser(phoneNumber,password)
 NoticationAPI	-x Company: HTTP.400(Bad Request)
@@ -91,11 +92,11 @@ NoticationAPI   ->> Company: HTTP.200(OK)
 RepositoryLayer ->> ServiceLayer : Found
 ServiceLayer	-x NoticationAPI: AlreadyExist
 NoticationAPI	-x Company: HTTP.400(Bad Request)
-```
+</div>
 
 **Company to NoticationAPI in CreateCallHistory**
 
-```mermaid
+<div class="mermaid">
 sequenceDiagram
 Company			-->> NoticationAPI: createCallHistory(called,caller)
 NoticationAPI	-x Company: HTTP.400(Bad Request)
@@ -109,10 +110,10 @@ NoticationAPI	-->> ServiceLayer: update(callHistory)
 RepositoryLayer ->> ServiceLayer : OK
 ServiceLayer 	->> NoticationAPI: OK
 NoticationAPI	->> Company: HTTP.200(OK)
-```
+</div>
 
 **Company to NoticationAPI in CreateDeliveryHistory**
-```mermaid
+<div class="mermaid">
 sequenceDiagram
 Company			-->> NoticationAPI: createDeliveryHistory(caller,called)
 NoticationAPI	-x Company: HTTP.400(Bad Request)
@@ -129,11 +130,11 @@ NoticationAPI	-->> ServiceLayer: delete(callHistory)
 RepositoryLayer ->> ServiceLayer : OK
 ServiceLayer 	->> NoticationAPI: OK
 NoticationAPI	->> Company: HTTP.200(OK)
-```
+</div>
 
 **NoticationSocket to PhoneUser**
 
-```mermaid
+<div class="mermaid">
 sequenceDiagram
 PhoneUser-->> NoticationSocket : connect/subscribe(phoneNumber,password)
 NoticationSocket -->> ServiceLayer: findUser(phoneNumber)
@@ -160,7 +161,7 @@ NoticationSocket ->> ServiceLayer : deleteCalHistory(phoneNumber)
 ServiceLayer	 ->> RepositoryLayer: deleteCalHistory(phoneNumber)
 RepositoryLayer  ->> ServiceLayer : OK
 ServiceLayer	 ->> NoticationSocket : OK
-```
+</div>
 
 # Notes
 
